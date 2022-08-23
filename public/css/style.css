@@ -38,24 +38,9 @@ a {
     min-width: 260px;
 }
 
-.error-alert{
-    opacity: 0;
-    animation-duration: 5s;
-    animation-name: beInvisible;
-}
-
 .footer{
     position:fixed;
     bottom:0px;
-}
-
-@keyframes beInvisible{
-    from{
-        opacity: 1;
-    }
-    to{
-        opacity: 0;
-    }
 }
 
 @media screen and (max-width:990px) {
