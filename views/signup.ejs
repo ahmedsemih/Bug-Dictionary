@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Dictionary - Signup</title>
+    <%- include('./layouts/imports') %>
+</head>
+
+<body>
+    <%- include('./layouts/navbar') %>
+        <div class="container-md d-flex flex-column align-items-center">
+            <form action="/signup" method="POST" class="sign-box">
+                <h1 class="text-center mb-3 pb-3 border-bottom">Create Account</h1>
+                <% if(msg !== "" ){ %>
+                    <div class="text-bg-danger form-control p-3 mb-3 error-alert">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                        <%= msg %>
+                    </div>
+                    <% } %>
+                        <div class="mb-3">
+                            <div class="input-group mb-1">
+                                <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" name="email" placeholder="Email" required>
+                                    <label for="email">Email</label>
+                                </div>
+                            </div>
+                            <% if(emailError){ %>
+                                <p class="text-danger"> <%= emailError %> </p>
+                            <% } %>
+                        </div>
+                        <div class="mb-3">
+                            <div class="input-group mb-1">
+                                <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" name="username" placeholder="Username"
+                                        required>
+                                    <label for="username">Username</label>
+                                </div>
+                            </div>
+                            <% if(usernameError){ %>
+                                <p class="text-danger"> <%= usernameError %> </p>
+                            <% } %>
+                        </div>
+                        <div class="mb-3">
+                            <div class="input-group mb-1">
+                                <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                <div class="form-floating">
+                                    <input class="form-control password" type="password" id="password" name="password"
+                                        placeholder="Password">
+                                    <label for="password">Password</label>
+                                </div>
+                                <span class="input-group-text">
+                                    <i class="fa fa-eye" id="togglePassword" style="cursor: pointer"></i>
+                                </span>
+                            </div>
+                            <% if(passwordError){ %>
+                                <p class="text-danger"> <%= passwordError %>  </p>
+                                <% } %>
+                            </div>
+                        <div class="mb-3">
+                            <input class="form-check-input me-1" type="checkbox" id="terms" name="terms" value="yes">
+                            <label class="form-check-label" for="terms">
+                                I agree the <em href="#">Terms of Service</em> and <em href="#">Privacy Policy</em>.
+                            </label>
+                        </div>
+                        <button type="submit" id="submitBtn" class="btn btn-primary form-control disabled">Create
+                            Account</button>
+            </form>
+            <p class="my-3">or</p>
+            <a href="/login" class="sign-bottom-link">
+                <button class="btn btn-outline-primary form-control w-100">Login</button>
+            </a>
+        </div>
+        <%- include('./layouts/footer') %>
+</body>
+
+</html>
