@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Dictionary - Login</title>
+    <%- include('./layouts/imports') %>
+</head>
+
+<body>
+    <%- include('./layouts/navbar') %>
+        <div class="container-md d-flex flex-column align-items-center">
+            <form action="/login" method="POST" class="sign-box">
+                <h1 class="text-center mb-3 pb-3 border-bottom">Login</h1>
+                <% if(msg){ %>
+                    <div class="text-bg-danger form-control p-3 mb-3 error-alert">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                        <%= msg %>
+                    </div>
+                    <% } %>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="fa-solid fa-envelope"></i></span>
+                            <div class="form-floating">
+                                <input type="email" class="form-control" name="email" placeholder="Email" required>
+                                <label for="email">Email</label>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                            <div class="form-floating">
+                                <input class="form-control password" type="password" id="password" name="password"
+                                    placeholder="Password">
+                                <label for="password">Password</label>
+                            </div>
+                            <span class="input-group-text"><i class="far fa-eye-slash" id="togglePassword"></i></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary form-control">Login</button>
+            </form>
+            <p class="my-3">or</p>
+            <a href="/signup" class="sign-bottom-link mb-3">
+                <button class="btn btn-outline-primary form-control w-100">Create Account</button>
+            </a>
+        </div>
+        <%- include('./layouts/footer') %>
+</body>
+
+</html>

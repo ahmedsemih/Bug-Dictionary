@@ -10,6 +10,9 @@ a {
     cursor: pointer !important;
 }
 
+
+/* NAVBAR */
+
 .searchbar {
     max-width: 500px;
     width: 35%;
@@ -38,10 +41,23 @@ a {
     min-width: 260px;
 }
 
+
+/* FOOTER */
+
 .footer{
     position:fixed;
     bottom:0px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px -1px 3px, rgba(0, 0, 0, 0.15) 0px 1px 2px;
 }
+
+.footer-link{
+    transition: .5s;
+    cursor:pointer;
+}
+.footer-link:hover{
+    text-decoration: underline !important;
+}
+
 
 @media screen and (max-width:990px) {
     .right-side {
