@@ -42,9 +42,28 @@ exports.createAccount = (req, res) => {
 };
 
 exports.Login = (req, res) => {
-
+    User.findOne({ email: req.body.email })
+        .then((user) => {
+            if (user) {
+                bcrypt.compare(req.body.password, user.password)
+                    .then((same) => {
+                        if (same) {
+                            req.session.currentUser = user;
+                            var url=req.session.redirectTo || '/';
+                            delete req.session.redirectTo;
+                            return res.redirect(url);
+                        } else {
+                            return res.render('login', { msg: 'Wrong email or password.' });
+                        }
+                    }).catch(err => console.log(err));
+            } else {
+                return res.render('login', { msg: 'Wrong email or password.' });
+            }
+        }).catch(err => console.log(err));
 };
 
 exports.Logout = (req, res) => {
-
+    req.session.destroy(() => {
+        res.redirect('/');
+    });
 };
