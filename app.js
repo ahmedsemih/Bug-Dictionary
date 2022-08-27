@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const topicRoutes = require('./routes/topicRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const userRoutes = require('./routes/userRoutes');
+const addToLocals=require('./middlewares/addToLocals');
 
 const app = express();
 const PORT = process.env.PORT || 3000
@@ -30,10 +31,7 @@ app.use(
         proxy: true
     })
 );
-app.use((req, res, next) => {
-    res.locals.currentUser = req.session.currentUser;
-    next();
-});
+app.use(addToLocals);
 
 // ROUTES
 app.use('/', authRoutes);
