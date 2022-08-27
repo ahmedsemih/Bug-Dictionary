@@ -28,6 +28,13 @@ a {
     min-height: 100vh;
 }
 
+
+/* SIGN FORMS */
+
+.mb-7{
+    margin-bottom: 7.5rem;
+}
+
 .sign-box {
     margin-top: 100px;
     width: 25vw;
@@ -45,9 +52,10 @@ a {
 /* FOOTER */
 
 .footer{
-    position:fixed;
+    position:relative;
     bottom:0px;
     box-shadow: rgba(0, 0, 0, 0.12) 0px -1px 3px, rgba(0, 0, 0, 0.15) 0px 1px 2px;
+    z-index: -1;
 }
 
 .footer-link{
@@ -59,10 +67,63 @@ a {
 }
 
 
+/* SIDEBAR */
+
+.sidebar{
+    min-height: 70vh;
+    z-index: -100;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar-link{
+    font-weight: 600;
+    transition: .2s;
+}
+.sidebar-link:hover {
+    color:#0D6EFD !important;
+}
+.sidebar-link:hover .sidebar-arrow{
+    visibility: visible;
+}
+
+.sidebar-text{
+    color:inherit
+}
+
+.sidebar-arrow{
+    color:inherit;
+    visibility: hidden;
+}
+
+.sidebar-active{
+    color:#0D6EFD !important;
+    visibility: visible;
+}
+
+.link{
+    transition: .2s;
+}
+.link:hover{
+    text-decoration: underline !important;
+    color: #0D6EFD !important;
+}
+
+/* PROFILE */
+
+.levelbar{
+    max-width: 500px;
+}
+
+.avatar{
+    font-size:6rem !important;
+}
+
+
 @media screen and (max-width:990px) {
     .right-side {
         margin: auto;
     }
 }
 
-;
+
