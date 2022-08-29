@@ -1,14 +1,16 @@
 const sequelize = require('./utils/database');
 const session = require("express-session");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
-require('dotenv').config();
+const methodOverride=require('method-override');
 const express = require('express');
+require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
 const topicRoutes = require('./routes/topicRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const userRoutes = require('./routes/userRoutes');
-const addToLocals=require('./middlewares/addToLocals');
+const entryRoutes = require('./routes/entryRoutes');
+const addToLocals = require('./middlewares/addToLocals');
 
 const app = express();
 const PORT = process.env.PORT || 3000
@@ -32,13 +34,16 @@ app.use(
     })
 );
 app.use(addToLocals);
+app.use(methodOverride('_method',{
+    methods: ['POST','GET']
+}));
 
 // ROUTES
 app.use('/', authRoutes);
 app.use('/users', userRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/topics', topicRoutes);
-
+app.use('/entries', entryRoutes);
 
 sequelize.sync().then(() => {
     console.log('All datas synced.');

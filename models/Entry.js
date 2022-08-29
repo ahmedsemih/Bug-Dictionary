@@ -18,9 +18,11 @@ const Entry = sequelize.define('Entry', {
     },
     like: {
         type: DataTypes.ARRAY(DataTypes.STRING),
+        defaultValue:{}
     },
     dislike: {
         type: DataTypes.ARRAY(DataTypes.STRING),
+        defaultValue:{}
     }
 },{
     updatedAt:false
