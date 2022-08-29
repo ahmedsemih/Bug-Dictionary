@@ -67,39 +67,39 @@
                                 class="d-flex flex-md-row flex-column justify-content-space-between align-items-center">
                                 <div class="d-flex w-md-50 w-100 py-2">
                                     <% if(liked){ %>
-                                        <a href="" class="link pe-2">
+                                        <a href="/entries/<%= entry.dataValues.id %>/like/<%= locals.currentUser.username %>" class="link pe-2">
                                             <i class="fa-solid fa-thumbs-up text-primary"></i>
                                             <%= entry.dataValues.like.length || 0 %>
                                         </a>
-                                        <% }else{ %>
-                                            <a href="" class="link pe-2">
-                                                <i class="fa-solid fa-thumbs-up"></i>
-                                                <%= entry.dataValues.like.length || 0 %>
-                                            </a>
-                                            <% } %>
-                                                <% if(disliked){ %>
-                                                    <a href="" class="px-3 link">
-                                                        <i class="fa-solid fa-thumbs-down text-primary"></i>
-                                                        <%= entry.dataValues.dislike.length || 0 %>
-                                                    </a>
-                                                    <% }else{ %>
-                                                        <a href="" class="px-3 link">
-                                                            <i class="fa-solid fa-thumbs-down"></i>
-                                                            <%= entry.dataValues.dislike.length || 0 %>
-                                                        </a>
-                                                        <% } %>
-                                                            <% if(username===locals.currentUser.username){ %>
-                                                                <a href="" class="px-3 border-start border-end link">
-                                                                    <i class="fa-solid fa-pencil"></i>
-                                                                </a>
-                                                                <a href="" class="px-3 border-end link">
-                                                                    <i class="fa-solid fa-trash"></i>
-                                                                </a>
-                                                                <% } %>
+                                    <% }else{ %>
+                                    <a href="/entries/<%= entry.dataValues.id %>/like/<%= locals.currentUser.username %>" class="link pe-2">
+                                        <i class="fa-solid fa-thumbs-up"></i>
+                                        <%= entry.dataValues.like.length || 0 %>
+                                    </a>
+                                    <% } %>
+                                    <% if(disliked){ %>
+                                    <a href="/entries/<%= entry.dataValues.id %>/dislike/<%= locals.currentUser.username %>" class="px-3 link">
+                                        <i class="fa-solid fa-thumbs-down text-primary"></i>
+                                        <%= entry.dataValues.dislike.length || 0 %>
+                                    </a>
+                                    <% }else{ %>
+                                    <a href="/entries/<%= entry.dataValues.id %>/dislike/<%= locals.currentUser.username %>" class="px-3 link">
+                                        <i class="fa-solid fa-thumbs-down"></i>
+                                        <%= entry.dataValues.dislike.length || 0 %>
+                                    </a>
+                                    <% } %>
+                                    <% if(username===locals.currentUser.username){ %>
+                                    <a href="/entries/<%= entry.dataValues.id %>" class="px-3 border-start border-end link">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </a>
+                                    <a href="/entries/<%= entry.dataValues.id %>?_method=DELETE" class="px-3 border-end link">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </a>
+                                    <% } %>
                                 </div>
                                 <div class="d-flex w-md-50 w-100 flex-md-row flex-column justify-content-end py-2">
-                                    <a href="/users/<%= username %>" class="link">
-                                        <h5 class="pe-3 text-primary lh-1">@<%= username %>
+                                    <a href="/users/<%= entry.dataValues.UserUsername %>" class="link">
+                                        <h5 class="pe-3 text-primary lh-1">@<%= entry.dataValues.UserUsername %>
                                         </h5>
                                     </a>
                                     <p class="text-muted">

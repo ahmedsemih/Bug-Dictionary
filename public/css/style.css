@@ -120,6 +120,15 @@ a {
 }
 
 
+/* ENTRY */
+
+textarea{
+    overflow: auto;
+    resize: none;
+    height:200px;
+    max-height:200px;
+}
+
 @media screen and (max-width:990px) {
     .right-side {
         margin: auto;
