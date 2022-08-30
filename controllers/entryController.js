@@ -1,6 +1,7 @@
 const sequelize = require('../utils/database');
 const Entry = require('../models/Entry');
 const Topic = require('../models/Topic');
+const User = require('../models/User');
 
 exports.getEntry = (req, res) => {
     if (req.params.id !== 'favicon.ico') {
@@ -19,7 +20,9 @@ exports.addEntry=(req,res)=>{
     Entry.create({
         text:req.body.text,
         UserUsername:res.locals.currentUser.username,
-        TopicId:req.body.topic
+        TopicId:req.body.topic,
+        updatedAt:Date.now(),
+        createdAt:Date.now(),
     })
     .then(()=>{
         return res.redirect('back');
@@ -63,6 +66,8 @@ exports.onClickLike = (req, res) => {
                 if (disliked) {
                     Entry.update({ 'dislike': sequelize.fn('array_remove', sequelize.col('dislike'), req.params.username) }, { where: { id: req.params.id } })
                         .then(() => {
+                            User.increment({point:1},{where:{username:entry.UserUsername}})
+                            .catch((error)=>console.log(error));
                             Entry.update({ 'like': sequelize.fn('array_append', sequelize.col('like'), req.params.username) },
                                 { where: { id: req.params.id } })
                                 .then(() => {
@@ -70,11 +75,15 @@ exports.onClickLike = (req, res) => {
                                 }).catch((error) => console.log(error));
                         }).catch((error) => console.log(error));
                 } else if (liked) {
+                    User.decrement({point:1},{where:{username:entry.UserUsername}})
+                    .catch((error)=>console.log(error));
                     Entry.update({ 'like': sequelize.fn('array_remove', sequelize.col('like'), req.params.username) }, { where: { id: req.params.id } })
                         .then(() => {
                             return res.redirect('back');
                         }).catch((error) => { console.log(error) });
                 } else {
+                    User.increment({point:1},{where:{username:entry.UserUsername}})
+                    .catch((error)=>console.log(error));
                     Entry.update({ 'like': sequelize.fn('array_append', sequelize.col('like'), req.params.username) }, { where: { id: req.params.id } })
                         .then(() => {
                             return res.redirect('back');
@@ -104,6 +113,8 @@ exports.onClickDislike = (req, res) => {
                 if (liked) {
                     Entry.update({ 'like': sequelize.fn('array_remove', sequelize.col('like'), req.params.username) }, { where: { id: req.params.id } })
                         .then(() => {
+                            User.decrement({point:1},{where:{username:entry.UserUsername}})
+                            .catch((error)=>console.log(error));
                             Entry.update({ 'dislike': sequelize.fn('array_append', sequelize.col('dislike'), req.params.username) }, { where: { id: req.params.id } })
                                 .then(() => {
                                     return res.redirect('back');

@@ -5,7 +5,7 @@ function init() {
 
     const terms = document.getElementById('terms');
     const submitBtn = document.getElementById('submitBtn');
-    
+
     // PASSWORD VISIBILITY
     togglePassword.addEventListener("click", function () {
 
