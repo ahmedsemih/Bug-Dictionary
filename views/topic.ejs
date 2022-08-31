@@ -19,19 +19,19 @@
                 </div>
                 <div class="col-xl-9 col-sm-8">
                     <a class="link" href="<%= locals.currentPath %>">
-                        <h3 class="pt-4 mt-md-0 mt-5">
+                        <h3 class="pt-4 mt-sm-0 mt-5">
                             <%= topic.dataValues.name %>
                         </h3>
                     </a>
                     <% if(entries.length>0){ %>
                     <% entries && entries.forEach((entry)=>{ %>
-                        <div class="pt-3 pe-3 border-bottom mt-sm-0 mt-3">
+                        <div class="pt-4 pb-3 pe-3 mt-sm-0 mt-4">
                             <p>
                                 <%= entry.dataValues.text %>
                             </p>
                             <div
                                 class="d-flex flex-md-row flex-column justify-content-space-between align-items-center">
-                                <div class="d-flex w-md-50 w-100 py-2">
+                                <div class="d-flex w-md-50 w-100 py-3">
                                     <% if(entry.dataValues.like.includes(locals.currentUser.username)){ %>
                                         <a href="/entries/<%= entry.dataValues.id %>/like/<%= locals.currentUser.username %>"
                                             class="link pe-2">
@@ -59,7 +59,7 @@
                                                             <%= entry.dataValues.dislike.length || 0 %>
                                                         </a>
                                                         <% } %>
-                                                            <a href="/entries/<%= entry.dataValues.id %>"
+                                                            <a href="/entries/<%= entry.dataValues.id %>/report?_method=POST"
                                                                 class="px-3 border-start border-end link">
                                                                 <i class="fa-solid fa-circle-exclamation"></i>
                                                                 Report

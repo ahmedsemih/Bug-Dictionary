@@ -39,7 +39,7 @@
                                     <% } %>
                         </a>
                         <% if(currentUser.role==="admin" && username===currentUser.username ){ %>
-                            <a href="/users/<%= currentUser.username %>/admin"
+                            <a href="/users/<%= locals.currentUser.username %>/admin"
                                 class="sidebar-link d-flex align-items-center justify-content-between">
                                 <% if(currentPath=='/users/' +currentUser.username+'/admin'){ %>
                                     <p class="fs-5 sidebar-active sidebar-text"># Admin Panel</p>
@@ -54,7 +54,7 @@
                 </div>
                 <div class="col-xl-9 col-sm-8">
                     <% entries && entries.forEach((entry)=>{ %>
-                        <div class="pt-4 pe-3 border-bottom mt-sm-0 mt-5">
+                        <div class="py-4 pe-3 border-bottom mt-sm-0 mt-5">
                             <a href="/topics/<%= entry.dataValues.TopicId %>" class="link">
                                 <h3>
                                     <%= entry.dataValues.Topic.dataValues.name %>
@@ -65,37 +65,50 @@
                             </p>
                             <div
                                 class="d-flex flex-md-row flex-column justify-content-space-between align-items-center">
-                                <div class="d-flex w-md-50 w-100 py-2">
-                                    <% if(liked){ %>
-                                        <a href="/entries/<%= entry.dataValues.id %>/like/<%= locals.currentUser.username %>" class="link pe-2">
+                                <div class="d-flex w-md-50 w-100 py-3">
+                                    <% if(entry.dataValues.like.includes(locals.currentUser.username)){ %>
+                                        <a href="/entries/<%= entry.dataValues.id %>/like/<%= locals.currentUser.username %>"
+                                            class="link pe-2">
                                             <i class="fa-solid fa-thumbs-up text-primary"></i>
                                             <%= entry.dataValues.like.length || 0 %>
                                         </a>
-                                    <% }else{ %>
-                                    <a href="/entries/<%= entry.dataValues.id %>/like/<%= locals.currentUser.username %>" class="link pe-2">
-                                        <i class="fa-solid fa-thumbs-up"></i>
-                                        <%= entry.dataValues.like.length || 0 %>
-                                    </a>
-                                    <% } %>
-                                    <% if(disliked){ %>
-                                    <a href="/entries/<%= entry.dataValues.id %>/dislike/<%= locals.currentUser.username %>" class="px-3 link">
-                                        <i class="fa-solid fa-thumbs-down text-primary"></i>
-                                        <%= entry.dataValues.dislike.length || 0 %>
-                                    </a>
-                                    <% }else{ %>
-                                    <a href="/entries/<%= entry.dataValues.id %>/dislike/<%= locals.currentUser.username %>" class="px-3 link">
-                                        <i class="fa-solid fa-thumbs-down"></i>
-                                        <%= entry.dataValues.dislike.length || 0 %>
-                                    </a>
-                                    <% } %>
-                                    <% if(username===locals.currentUser.username){ %>
-                                    <a href="/entries/<%= entry.dataValues.id %>" class="px-3 border-start border-end link">
-                                        <i class="fa-solid fa-pencil"></i>
-                                    </a>
-                                    <a href="/entries/<%= entry.dataValues.id %>?_method=DELETE" class="px-3 border-end link">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                    <% } %>
+                                        <% }else{ %>
+                                            <a href="/entries/<%= entry.dataValues.id %>/like/<%= locals.currentUser.username %>"
+                                                class="link pe-2">
+                                                <i class="fa-solid fa-thumbs-up"></i>
+                                                <%= entry.dataValues.like.length || 0 %>
+                                            </a>
+                                            <% } %>
+                                                <% if(entry.dataValues.dislike.includes(locals.currentUser.username)){
+                                                    %>
+                                                    <a href="/entries/<%= entry.dataValues.id %>/dislike/<%= locals.currentUser.username %>"
+                                                        class="px-3 link">
+                                                        <i class="fa-solid fa-thumbs-down text-primary"></i>
+                                                        <%= entry.dataValues.dislike.length || 0 %>
+                                                    </a>
+                                                    <% }else{ %>
+                                                        <a href="/entries/<%= entry.dataValues.id %>/dislike/<%= locals.currentUser.username %>"
+                                                            class="px-3 link">
+                                                            <i class="fa-solid fa-thumbs-down"></i>
+                                                            <%= entry.dataValues.dislike.length || 0 %>
+                                                        </a>
+                                                        <% } %>
+                                            <% if(locals.currentUser.username === username ){ %>
+                                                <a href="/entries/<%= entry.dataValues.id %>"
+                                                    class="px-3 border-start border-end link">
+                                                    <i class="fa-solid fa-pen"></i>
+                                                </a>
+                                                <a href="/entries/<%= entry.dataValues.id %>?_method=DELETE"
+                                                    class="px-3 border-start border-end link">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </a>       
+                                            <% }else{ %>
+                                                <a href="/entries/<%= entry.dataValues.id %>/report?_method=POST"
+                                                    class="px-3 border-start border-end link">
+                                                    <i class="fa-solid fa-circle-exclamation"></i>
+                                                    Report
+                                                </a>
+                                            <% } %>
                                 </div>
                                 <div class="d-flex w-md-50 w-100 flex-md-row flex-column justify-content-end py-2">
                                     <a href="/users/<%= entry.dataValues.UserUsername %>" class="link">
@@ -115,7 +128,6 @@
         <%- include('./layouts/footer') %>
         <script>
             const onClickMenu=()=>{
-                console.log('clicked');
                 const menu=document.getElementById('user-menu');
                 var exists=menu.classList.contains('d-none');
                 if(exists){
