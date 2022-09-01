@@ -44,6 +44,9 @@ app.use('/users', userRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/topics', topicRoutes);
 app.use('/entries', entryRoutes);
+app.get('*',(req,res)=>{
+    res.render('notfound');
+});
 
 sequelize.sync().then(() => {
     console.log('All datas synced.');
