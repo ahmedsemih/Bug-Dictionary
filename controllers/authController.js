@@ -1,9 +1,20 @@
 const bcrypt = require('bcryptjs');
 
 const User = require('../models/User');
+const Topic = require('../models/Topic');
+const Entry = require('../models/Entry');
 
-exports.getHomePage = (req, res) => {
-    res.render('index');
+exports.getHomePage = async (req, res) => {
+    if (req.params.id !== 'favicon.ico') {
+        const page = req.query.page - 1 || 0;
+        const entryArray = [];
+        const result= await Topic.findAndCountAll({offset: 10 * page, limit: 10});
+        for(let i=0; i<result.rows.length;i++){
+            const entries = await Entry.findAll({ limit:1, where: { TopicId: result.rows[i].dataValues.id }, include: Topic, order: [['like', 'DESC']] });
+            entryArray.push(entries[0].dataValues);
+        }
+        return res.render('index', { topics:result.rows, entries:entryArray,currentPage: page + 1, totalCount: result.count,categoryId:req.params.id });
+    };
 };
 
 exports.getLoginPage = (req, res) => {
@@ -42,7 +53,7 @@ exports.createAccount = (req, res) => {
 };
 
 exports.Login = (req, res) => {
-    User.findOne({ email: req.body.email })
+    User.findOne({where:{ email: req.body.email }})
         .then((user) => {
             if (user) {
                 bcrypt.compare(req.body.password, user.password)
