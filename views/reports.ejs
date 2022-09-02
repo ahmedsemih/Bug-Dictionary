@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Dictionary - Reports</title>
+    <%- include('./layouts/imports') %>
+</head>
+<body>
+    <%- include('./layouts/navbar') %>
+    <div class="container-md">
+        <div class="row">
+            <div class="col-xl-3 col-sm-4">
+                <div class="bg-white w-100 d-sm-none d-block position-fixed start-0 end-0 p-2">
+                    <button onclick="onClickMenu()" id="menu-btn" class="btn btn-primary w-100 mx-auto">Menu <i class="fa-solid fa-bars ps-2"></i></button>
+                </div>
+                <nav id="user-menu" class="w-100 bg-white mt-sm-0 mt-5 sidebar d-flex flex-column p-3 border-end my-2 d-sm-block d-none">
+                    <a href="/users/<%= username %>"
+                        class="sidebar-link d-flex align-items-center justify-content-between">
+                        <% if(currentPath=='/users/' + username){ %>
+                            <p class="fs-5 sidebar-active sidebar-text"># Profile</p>
+                            <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
+                            <% }else{ %>
+                                <p class="fs-5 sidebar-text"># Profile</p>
+                                <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
+                                <% } %>
+                    </a>
+                    <a href="/users/<%= username %>/entries"
+                        class="sidebar-link d-flex align-items-center justify-content-between">
+                        <% if(currentPath=='/users/' + username +'/entries'){ %>
+                            <p class="fs-5 sidebar-active sidebar-text"># Entries</p>
+                            <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
+                            <% }else{ %>
+                                <p class="fs-5 sidebar-text"># Entries</p>
+                                <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
+                                <% } %>
+                    </a>
+                    <% if(currentUser.role==="admin" ){ %>
+                        <a href="/users/<%= currentUser.username %>/admin"
+                            class="sidebar-link d-flex align-items-center justify-content-between">
+                            <% if(currentPath=='/users/' +currentUser.username+'/admin'){ %>
+                                <p class="fs-5 sidebar-active sidebar-text"># Admin Panel</p>
+                                <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
+                            <% }else{ %>
+                                    <p class="fs-5 sidebar-text"># Admin Panel</p>
+                                    <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
+                            <% } %>                                    
+                        </a>
+                        <a href="/users/<%= currentUser.username %>/reports"
+                            class="sidebar-link d-flex align-items-center justify-content-between">
+                            <% if(currentPath=='/users/' +currentUser.username+'/reports'){ %>
+                                <p class="fs-5 sidebar-active sidebar-text"># Reports</p>
+                                <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
+                            <% }else{ %>
+                                    <p class="fs-5 sidebar-text"># Reports</p>
+                                    <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
+                            <% } %>                                    
+                        </a>
+                        <% } %>
+                </nav>
+            </div>
+            <div class="col-xl-9 col-sm-8">
+                <% report.length > 0 && report.forEach((report)=>{ %>
+                    <div class="pt-4 pe-3 border-bottom mt-sm-0 mt-5">
+                        <div class="fw-light text-primary d-flex">
+                            <p class="fs-3">Report Id: <%= report.dataValues.id %></p>
+                            <p class="fs-3 ms-3" >Entry Id: <%= report.dataValues.Entry.dataValues.id %></p>   
+                        </div>
+                        <p>
+                            <%= report.dataValues.Entry.dataValues.text %>
+                        </p>
+                        <div class="d-flex flex-md-row flex-column justify-content-space-between align-items-center">
+                            <div class="d-flex w-md-50 w-100 flex-row justify-content-start py-sm-2 py-4">
+                                <a href="/entries/<%= report.dataValues.Entry.dataValues.id %>?_method=DELETE">
+                                    <button class="btn btn-primary">Delete Entry</button>
+                                </a>
+                                <a href="/entries/<%= report.dataValues.Entry.dataValues.id %>/report?_method=DELETE">
+                                    <button class="btn ms-3 btn-outline-primary">Clear Report</button>
+                                </a>
+                            </div>
+                            <div class="d-flex w-md-50 w-100 flex-md-row flex-column justify-content-end py-2">
+                                <a href="/users/<%= report.dataValues.Entry.dataValues.UserUsername %>" class="link">
+                                    <h5 class="pe-3 text-primary lh-1">@<%= report.dataValues.Entry.dataValues.UserUsername %></h5>
+                                </a>
+                                <p class="text-muted">
+                                    <%= locals.moment(report.dataValues.Entry.dataValues.createdAt).format('DD.MM.YYYY - hh.mm A') %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+                <% if(report.length < 1){ %>
+                    <div class="w-100 text-center my-5">
+                        <i class="fa-solid fa-bug avatar my-4"></i>
+                        <h2>There is no report to review.</h2>
+                        <a href="/users/<%= currentUser.username %>/admin">
+                            <button class="btn btn-primary my-5">
+                                Go to Admin Panel
+                            </button>
+                        </a>
+                    </div>
+                <% } %>
+                <div class="pt-3 w-100 d-flex justify-content-center">
+                    <nav>
+                        <ul class="pagination">
+                            <li class="page-item <%= currentPage-1 === 0 && 'disabled' %>">
+                                <a href="/users/<%= currentUser.username %>/reports?page=<%= currentPage-1 %>"
+                                    class="page-link">
+                                    <span>&laquo;</span>
+                                </a>
+                            </li>
+                            <% for(let i=1 ; i < (totalCount/10)+1 ; i++ ){ %>
+                            <li class="page-item <%= currentPage === i && 'active' %>">
+                                <a class="page-link" href="/users/<%= currentUser.username %>/reports?page=<%= i %>"><%= i %></a>
+                            </li>
+                            <% } %>
+                            <li class="page-item <%= currentPage+1 > (totalCount/10) && 'disabled' %>">
+                                <a class="page-link" href="/users/<%= currentUser.username %>/reports?page=<%= currentPage+1 %>">
+                                    <span>&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('./layouts/footer') %>
+    <script>
+        const onClickMenu=()=>{
+            const menu=document.getElementById('user-menu');
+            var exists=menu.classList.contains('d-none');
+            if(exists){
+                menu.classList.remove('d-none');
+            }else{
+                menu.classList.add('d-none');
+            }
+        };
+    </script>
+</body>
+</html>
