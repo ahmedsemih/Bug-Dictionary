@@ -17,6 +17,7 @@
                     <%- include('./layouts/sidebar') %>
                 </div>
                 <div class="col-xl-9 col-sm-8">
+                    <!-- Category Content -->
                     <% topics.length>0 && topics.forEach((topic,index)=>{ %>
                         <div class="pt-sm-4 pt-5 pe-3 mt-sm-0 mt-3">
                             <a href="/topics/<%= topic.dataValues.id %>" class="link">
@@ -27,31 +28,30 @@
                             <p>
                                 <%= entries[index].text %>
                             </p>
-                            <div
-                                class="d-flex flex-md-row flex-column justify-content-space-between align-items-center">
+                            <div class="d-flex flex-md-row flex-column justify-content-space-between align-items-center">
                                 <div class="d-flex w-md-50 w-100 py-3">
-                                    <% if(entries[index].like.includes(locals.currentUser.username)){ %>
-                                        <a href="/entries/<%= entries[index].id %>/like/<%= locals.currentUser.username %>"
+                                    <% if(locals.currentUser && entries[index].like.includes(locals.currentUser.username)){ %>
+                                        <a href="/entries/<%= entries[index].id %>/like/<%= locals.currentUser.username || 'x' %>"
                                             class="link pe-2">
                                             <i class="fa-solid fa-thumbs-up text-primary"></i>
                                             <%= entries[index].like.length || 0 %>
                                         </a>
                                         <% }else{ %>
-                                            <a href="/entries/<%= entries[index].id %>/like/<%= locals.currentUser.username %>"
+                                            <a href="/entries/<%= entries[index].id %>/like/<%= locals.currentUser.username || 'x' %>"
                                                 class="link pe-2">
                                                 <i class="fa-solid fa-thumbs-up"></i>
                                                 <%= entries[index].like.length || 0 %>
                                             </a>
                                             <% } %>
-                                                <% if(entries[index].dislike.includes(locals.currentUser.username)){
+                                                <% if(locals.currentUser && entries[index].dislike.includes(locals.currentUser.username)){
                                                     %>
-                                                    <a href="/entries/<%= entries[index].id %>/dislike/<%= locals.currentUser.username %>"
+                                                    <a href="/entries/<%= entries[index].id %>/dislike/<%= locals.currentUser.username || 'x' %>"
                                                         class="px-3 link">
                                                         <i class="fa-solid fa-thumbs-down text-primary"></i>
                                                         <%= entries[index].dislike.length || 0 %>
                                                     </a>
                                                     <% }else{ %>
-                                                        <a href="/entries/<%= entries[index].id %>/dislike/<%= locals.currentUser.username %>"
+                                                        <a href="/entries/<%= entries[index].id %>/dislike/<%= locals.currentUser.username || 'x' %>"
                                                             class="px-3 link">
                                                             <i class="fa-solid fa-thumbs-down"></i>
                                                             <%= entries[index].dislike.length || 0 %>
@@ -75,6 +75,17 @@
                             </div>
                         </div>
                         <% }) %>
+                        <% if(topics.length < 1){ %>
+                        <div class=" pt-sm-4 pt-5 pe-3 mt-5 text-center">
+                            <h3 class="">We are sorry about that. There are no topics or entries. :(</h3>
+                                <a href="/">
+                                    <button class="btn btn-primary mt-5">Go to Home</button>
+                                </a>
+                        </div>
+                        <% } %> 
+                        <!-- Category Content End -->
+
+                        <!-- Pagination --> 
                         <div class="pt-5 w-100 d-flex justify-content-center">
                             <nav>
                                 <ul class="pagination">
@@ -97,6 +108,34 @@
                                 </ul>
                             </nav>
                         </div>
+                        <!-- Pagination End -->
+                        
+                        <!-- Topic And Entry Creator -->
+                        <% if(locals.currentUser.role === "admin" || locals.currentUser.point > 500){ %>
+                        <div class="py-5 border-top">
+                            <h4 >Create a new topic and write its first entry</h4>
+                            <form class="my-3" action="/topics" method="POST">
+                                <input type="text" value="<%= categoryId %>" name="CategoryId" hidden>
+                                <input type="text" value="true" name="status" hidden>
+                                <input type="text" class="form-control my-2" value="" required placeholder="Topic Name" name="name" maxlength="100">
+                                <textarea 
+                                class="form-control" 
+                                spellcheck="false"
+                                name="entry" 
+                                cols="30" 
+                                rows="30" 
+                                maxlength="1000"
+                                placeholder="Entry Text"
+                                required
+                                ></textarea>
+                                <div class="w-100 py-3 d-flex justify-content-md-end justify-content-center">
+                                    <button type="submit" class="btn btn-primary px-4 me-3">Create</button>
+                                    <button type="reset" class="btn btn-outline-primary px-3">Reset</button>
+                                </div>
+                            </form>
+                        </div>
+                        <% } %>
+                        <!-- Topic And Entry Creator End -->
                 </div>
             </div>
         </div>

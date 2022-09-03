@@ -19,13 +19,27 @@ exports.getTopicById = (req, res) => {
 };
 
 exports.addTopic = (req, res) => {
-
+    Topic.create({
+        name:req.body.name,
+        status:req.body.status,
+        CategoryId:req.body.CategoryId,
+        createdAt:Date.now()
+    }).then((topic)=>{
+        Entry.create({
+            text:req.body.entry,
+            TopicId:topic.dataValues.id,
+            UserUsername:res.locals.currentUser.username
+        }).then(()=>{
+            res.redirect('back');
+        }).catch((error)=>console.log(error));
+    }).catch((error)=>console.log(error));
 };
 
 exports.updateTopic = (req, res) => {
-
-};
-
-exports.deleteTopic = (req, res) => {
-
+    if (req.params.id !== 'favicon.ico') {
+        Topic.update(req.body, { where: { id: req.params.id } })
+            .then(() => {
+                res.redirect('back');
+            }).catch((error) => console.log(error));
+    }
 };
