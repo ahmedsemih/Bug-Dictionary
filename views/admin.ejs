@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Dictionary - Admin Panel</title>
+    <%- include('./layouts/imports') %>
+</head>
+
+<body>
+    <%- include('./layouts/navbar') %>
+        <div class="container-md">
+            <div class="row">
+                <div class="col-xl-3 col-sm-4">
+                    <div class="bg-white w-100 d-sm-none d-block position-fixed start-0 end-0 p-2">
+                        <button onclick="onClickMenu()" id="menu-btn" class="btn btn-primary w-100 mx-auto">Menu <i
+                                class="fa-solid fa-bars ps-2"></i></button>
+                    </div>
+                    <nav id="user-menu"
+                        class="w-100 bg-white mt-sm-0 mt-5 sidebar d-flex flex-column p-3 border-end my-2 d-sm-block d-none">
+                        <a href="/users/<%= username %>"
+                            class="sidebar-link d-flex align-items-center justify-content-between">
+                            <% if(currentPath=='/users/' + username){ %>
+                                <p class="fs-5 sidebar-active sidebar-text"># Profile</p>
+                                <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
+                                <% }else{ %>
+                                    <p class="fs-5 sidebar-text"># Profile</p>
+                                    <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
+                                    <% } %>
+                        </a>
+                        <a href="/users/<%= username %>/entries"
+                            class="sidebar-link d-flex align-items-center justify-content-between">
+                            <% if(currentPath=='/users/' + username +'/entries'){ %>
+                                <p class="fs-5 sidebar-active sidebar-text"># Entries</p>
+                                <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
+                                <% }else{ %>
+                                    <p class="fs-5 sidebar-text"># Entries</p>
+                                    <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
+                                    <% } %>
+                        </a>
+                        <% if(currentUser.role==="admin" ){ %>
+                            <a href="/users/<%= currentUser.username %>/admin"
+                                class="sidebar-link d-flex align-items-center justify-content-between">
+                                <% if(currentPath=='/users/' +currentUser.username+'/admin'){ %>
+                                    <p class="fs-5 sidebar-active sidebar-text"># Admin Panel</p>
+                                    <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
+                                    <% }else{ %>
+                                        <p class="fs-5 sidebar-text"># Admin Panel</p>
+                                        <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
+                                        <% } %>
+                            </a>
+                            <a href="/users/<%= currentUser.username %>/reports"
+                                class="sidebar-link d-flex align-items-center justify-content-between">
+                                <% if(currentPath=='/users/' +currentUser.username+'/reports'){ %>
+                                    <p class="fs-5 sidebar-active sidebar-text"># Reports</p>
+                                    <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
+                                    <% }else{ %>
+                                        <p class="fs-5 sidebar-text"># Reports</p>
+                                        <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
+                                        <% } %>
+                            </a>
+                            <% } %>
+                    </nav>
+                </div>
+                <div class="col-xl-9 col-sm-8">
+                    <div class="d-flex py-3 mt-sm-0 mt-5">
+                        <a href="/users/<%= currentUser.username %>/admin?type=categories" class="me-2">
+                            <button
+                                class="btn <%= type === 'categories' ? 'btn-primary' : 'btn-outline-primary' %>">Categories</button>
+                        </a>
+                        <a href="/users/<%= currentUser.username %>/admin?type=topics" class="me-2">
+                            <button
+                                class="btn <%= type === 'topics' ? 'btn-primary' : 'btn-outline-primary' %>">Topics</button>
+                        </a>
+                        <a href="/users/<%= currentUser.username %>/admin?type=users">
+                            <button
+                                class="btn <%= type === 'users' ? 'btn-primary' : 'btn-outline-primary' %>">Users</button>
+                        </a>
+                    </div>
+                    <div class="pb-3">
+
+                        <!-- Category Tab -->
+                        <% if(type==='categories' ){ %>
+
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Id</th>
+                                        <th scope="col">Category Name</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">
+                                            <button data-bs-toggle="modal" data-bs-target="#categoryAddModal"
+                                                class="btn btn-primary"><i class="fa-solid fa-plus"></i></button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% categories && categories.forEach((category)=>{ %>
+                                        <tr>
+                                            <form action="/categories/<%= category.dataValues.id %>?_method=PUT" method="POST">
+                                                <th scope="row">
+                                                    <%= category.dataValues.id %>
+                                                </th>
+                                                <td>
+                                                    <input class="edit-input py-1" type="text" name="name" value="<%= category.dataValues.name %>">
+                                                </td>
+                                                <td>
+                                                    <select class="edit-input py-1" name="status">
+                                                        <% if(category.dataValues.status){ %>
+                                                            <option selected value="true">Active</option>
+                                                            <option value="false">Inactive</option>
+                                                        <% }else{ %>
+                                                            <option value="true">Active</option>
+                                                            <option selected value="false">Inactive</option>
+                                                        <% } %>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </button>
+                                                </td>
+                                            </form>
+                                        </tr>
+                                        <% }) %>
+                                </tbody>
+                            </table>
+
+                            <!-- Add Modal -->
+                            <div class="modal fade" id="categoryAddModal" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Add Category</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body w-100">
+                                            <form action="/categories" method="POST" class="w-100">
+                                                    <label class="form-label">Category Name</label>
+                                                    <input type="text" name="categoryName" class="form-control">
+                                                <label for="status" class="form-label mt-3">Status</label>
+                                                <select name="status" class="form-select">
+                                                    <option selected value="true">Active</option>
+                                                    <option value="false">Inactive</option>
+                                                </select>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary px-3">Add</button>
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Topic Tab -->
+                            <% }else if(type==='topics' ){ %>
+                                
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Id</th>
+                                            <th scope="col">Topic Name</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Category Name</th>
+                                            <th scope="col">
+                                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#topicAddModal">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% topics && topics.forEach((topic)=>{ %>
+                                            <tr>
+                                                <form action="/topics/<%= topic.dataValues.id %>?_method=PUT" method="POST">
+                                                <th scope="row">
+                                                    <%= topic.dataValues.id %>
+                                                </th>
+                                                <td>
+                                                    <input class="edit-input py-1" type="text" name="name" value="<%= topic.dataValues.name %>">
+                                                </td>
+                                                <td>
+                                                    <select class="edit-input py-1" name="status">
+                                                        <% if(topic.dataValues.status){ %>
+                                                            <option selected value="true">Active</option>
+                                                            <option value="false">Inactive</option>
+                                                        <% }else{ %>
+                                                            <option value="true">Active</option>
+                                                            <option selected value="false">Inactive</option>
+                                                        <% } %>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select name="CategoryId" class="edit-input py-1">
+                                                        <% categories && categories.forEach((category)=>{ %>
+                                                            <% if(topic.dataValues.Category.dataValues.id === category.dataValues.id){ %>
+                                                            <option selected value="<%= category.dataValues.id %>"><%= category.dataValues.name %></option>
+                                                            <% }else{ %>
+                                                            <option value="<%= category.dataValues.id %>"><%= category.dataValues.name %></option>
+                                                            <% } %>
+                                                        <% }) %>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </button>
+                                                </td>
+                                            </form>
+                                            </tr>
+                                            <% }) %>
+                                    </tbody>
+                                </table>
+
+                                <!-- Add Modal -->
+                                <div class="modal fade" id="topicAddModal" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" >Add Topic</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="/topics" method="POST">
+                                                    <label class="form-label" for="name">Name</label>
+                                                    <input type="text" name="name" class="form-control">
+                                                <label for="status" class="form-label mt-3">Status</label>
+                                                <select name="status" class="form-select">
+                                                    <option selected value="true">Active</option>
+                                                    <option value="false">Inactive</option>
+                                                </select>
+                                                <label for="CategoryId" class="form-label mt-3">Category</label>
+                                                <select name="CategoryId" class="form-select">
+                                                    <% categories && categories.forEach((category)=>{ %>
+                                                        <option value="<%= category.dataValues.id %>"><%= category.dataValues.name %></option>
+                                                    <% }) %>
+                                                </select>
+                                                <label for="entry" class="form-label mt-3">First Entry</label>
+                                                <textarea type="text" name="entry" class="form-control" maxlength="1000"></textarea>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Add</button>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }else{ %>
+
+                                    <!-- User Tab -->
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Username</th>
+                                                <th scope="col">Point</th>
+                                                <th scope="col">Role</th>
+                                                <th scope="col"> # </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% users && users.forEach((user)=>{ %>
+                                                <tr>
+                                                    <form action="/users/<%= user.dataValues.username %>?_method=PUT" method="POST">
+                                                    <td scope="row">
+                                                       <a class="link" href="/users/<%= user.dataValues.username %>"><%= user.dataValues.username %></a> 
+                                                    </td>
+                                                    <td>
+                                                       <%= user.dataValues.point %>
+                                                    </td>
+                                                    <td>
+                                                        <select class="edit-input py-1" name="role">
+                                                            <% if(user.dataValues.role === 'user'){ %>
+                                                                <option selected value="user">User</option>
+                                                                <option value="admin">Admin</option>
+                                                                <option value="banned">Banned</option>
+                                                            <% }else if(user.dataValues.role === 'admin'){ %>
+                                                                <option value="user">User</option>
+                                                                <option selected value="admin">Admin</option>
+                                                                <option value="banned">Banned</option>
+                                                            <% }else{ %>
+                                                                <option value="user">User</option>
+                                                                <option value="admin">Admin</option>
+                                                                <option selected value="banned">Banned</option>
+                                                            <% } %>    
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <button type="submit" class="btn btn-primary">
+                                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                        </button>
+                                                    </td>
+                                                </form>
+                                                </tr>
+                                                <% }) %>
+                                        </tbody>
+                                    </table>
+
+                                    <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%- include('./layouts/footer') %>
+            <script>
+                const menu = document.getElementById('user-menu');
+
+                const onClickMenu = () => {
+                    var exists = menu.classList.contains('d-none');
+                    if (exists) {
+                        menu.classList.remove('d-none');
+                    } else {
+                        menu.classList.add('d-none');
+                    }
+                };
+            </script>
+</body>
+
+</html>
