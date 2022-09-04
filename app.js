@@ -10,6 +10,7 @@ const topicRoutes = require('./routes/topicRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const userRoutes = require('./routes/userRoutes');
 const entryRoutes = require('./routes/entryRoutes');
+const searchRoutes = require('./routes/searchRoutes')
 const addToLocals = require('./middlewares/addToLocals');
 
 const app = express();
@@ -44,6 +45,7 @@ app.use('/users', userRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/topics', topicRoutes);
 app.use('/entries', entryRoutes);
+app.use('/search',searchRoutes);
 app.get('*',(req,res)=>{
     res.render('notfound');
 });

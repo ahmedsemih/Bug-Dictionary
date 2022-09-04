@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug Dictionary - </title>
+    <%- include('./layouts/imports') %>
+</head>
+<body>
+    <%- include('./layouts/navbar') %>
+    <div class="container-md">
+        <div class="row">
+            <div class="col-xl-3 col-sm-4">
+                <%- include('./layouts/sidebar') %>
+            </div>
+            <div class="col-xl-9 col-sm-8">
+                
+                <!-- Content -->
+                <% topics.length>0 && topics.forEach((topic,index)=>{ %>
+                    <div class="pt-sm-4 pt-5 pe-3 mt-sm-0 mt-3">
+                        <a href="/topics/<%= topic.dataValues.id %>" class="link">
+                            <h3>
+                                <%= topic.dataValues.name %>
+                            </h3>
+                        </a>
+                        <p>
+                            <%= entries[index].text %>
+                        </p>
+                        <div class="d-flex flex-md-row flex-column justify-content-space-between align-items-center">
+                            <div class="d-flex w-md-50 w-100 py-3">
+                                <% if(locals.currentUser && entries[index].like.includes(locals.currentUser.username)){ %>
+                                    <a href="/entries/<%= entries[index].id %>/like/<%= locals.currentUser.username || 'x' %>"
+                                        class="link pe-2">
+                                        <i class="fa-solid fa-thumbs-up text-primary"></i>
+                                        <%= entries[index].like.length || 0 %>
+                                    </a>
+                                    <% }else{ %>
+                                        <a href="/entries/<%= entries[index].id %>/like/<%= locals.currentUser.username || 'x' %>"
+                                            class="link pe-2">
+                                            <i class="fa-solid fa-thumbs-up"></i>
+                                            <%= entries[index].like.length || 0 %>
+                                        </a>
+                                        <% } %>
+                                            <% if(locals.currentUser && entries[index].dislike.includes(locals.currentUser.username)){
+                                                %>
+                                                <a href="/entries/<%= entries[index].id %>/dislike/<%= locals.currentUser.username || 'x' %>"
+                                                    class="px-3 link">
+                                                    <i class="fa-solid fa-thumbs-down text-primary"></i>
+                                                    <%= entries[index].dislike.length || 0 %>
+                                                </a>
+                                                <% }else{ %>
+                                                    <a href="/entries/<%= entries[index].id %>/dislike/<%= locals.currentUser.username || 'x' %>"
+                                                        class="px-3 link">
+                                                        <i class="fa-solid fa-thumbs-down"></i>
+                                                        <%= entries[index].dislike.length || 0 %>
+                                                    </a>
+                                                    <% } %>
+                                                        <a href="/entries/<%= entries[index].id %>/report?_method=POST"
+                                                            class="px-3 border-start border-end link">
+                                                            <i class="fa-solid fa-circle-exclamation"></i>
+                                                            Report
+                                                        </a>
+                            </div>
+                            <div class="d-flex w-md-50 w-100 flex-md-row flex-column justify-content-end py-2">
+                                <a href="/users/<%= entries[index].UserUsername %>" class="link">
+                                    <h5 class="pe-3 text-primary lh-1">@<%= entries[index].UserUsername %>
+                                    </h5>
+                                </a>
+                                <p class="text-muted">
+                                    <%= locals.moment(entries[index].createdAt).format('DD.MM.YYYY - hh.mm A') %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+                    <% if(topics.length < 1){ %>
+                        <div class=" pt-sm-4 pt-5 pe-3 mt-5 text-center">
+                            <h3 class="">Sorry, we couldn't find what you were looking for. :(</h3>
+                                <a href="/">
+                                    <button class="btn btn-primary mt-5">Go to Home</button>
+                                </a>
+                        </div>
+                    <% } %> 
+                    <!-- Content End -->
+                
+            </div>
+        </div>
+    </div>
+    <%- include('./layouts/footer') %>
+</body>
+</html>
