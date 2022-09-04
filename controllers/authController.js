@@ -8,12 +8,14 @@ exports.getHomePage = async (req, res) => {
     if (req.params.id !== 'favicon.ico') {
         const page = req.query.page - 1 || 0;
         const entryArray = [];
-        const result= await Topic.findAndCountAll({offset: 10 * page, limit: 10});
-        for(let i=0; i<result.rows.length;i++){
-            const entries = await Entry.findAll({ limit:1, where: { TopicId: result.rows[i].dataValues.id }, include: Topic, order: [['like', 'DESC']] });
-            entryArray.push(entries[0].dataValues);
+        const topicArray = [];
+        const result = await Topic.findAndCountAll({ offset: 10 * page, limit: 10, where: { status: true } });
+        for (let i = 0; i < result.rows.length; i++) {
+            const entries = await Entry.findAll({ limit: 1, where: { TopicId: result.rows[i].dataValues.id }, include: Topic, order: [['like', 'DESC']] });
+            entries.length > 0 && entryArray.push(entries[0].dataValues);
+            entries.length > 0 && topicArray.push(result.rows[i]);
         }
-        return res.render('index', { topics:result.rows, entries:entryArray,currentPage: page + 1, totalCount: result.count,categoryId:req.params.id });
+        return res.render('index', { topics: topicArray, entries: entryArray, currentPage: page + 1, totalCount: result.count, categoryId: req.params.id });
     };
 };
 
@@ -53,16 +55,20 @@ exports.createAccount = (req, res) => {
 };
 
 exports.Login = (req, res) => {
-    User.findOne({where:{ email: req.body.email }})
+    User.findOne({ where: { email: req.body.email } })
         .then((user) => {
             if (user) {
                 bcrypt.compare(req.body.password, user.password)
                     .then((same) => {
                         if (same) {
-                            req.session.currentUser = user;
-                            var url=req.session.redirectTo || '/';
-                            delete req.session.redirectTo;
-                            return res.redirect(url);
+                            if (user.role !== 'banned') {
+                                req.session.currentUser = user;
+                                var url = req.session.redirectTo || '/';
+                                delete req.session.redirectTo;
+                                return res.redirect(url);
+                            } else {
+                                return res.render('login', { msg: 'Your account has been banned.' });
+                            }
                         } else {
                             return res.render('login', { msg: 'Wrong email or password.' });
                         }

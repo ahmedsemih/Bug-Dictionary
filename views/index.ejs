@@ -17,6 +17,8 @@
                     <%- include('./layouts/sidebar') %>
                 </div>
                 <div class="col-xl-9 col-sm-8">
+
+                    <!-- Entries -->
                     <% topics.length>0 && topics.forEach((topic,index)=>{ %>
                         <div class="pt-sm-4 pt-5 pe-3 mt-sm-0 mt-3">
                             <a href="/topics/<%= topic.dataValues.id %>" class="link">
@@ -75,6 +77,9 @@
                             </div>
                         </div>
                         <% }) %>
+                        <!-- Entries End -->
+
+                        <!-- Pagination -->
                         <div class="pt-5 w-100 d-flex justify-content-center">
                             <nav>
                                 <ul class="pagination">
@@ -96,7 +101,9 @@
                                     </li>
                                 </ul>
                             </nav>
-                        </div>                  
+                        </div>
+                        <!-- Pagination End -->
+
                 </div>
             </div>
         </div>

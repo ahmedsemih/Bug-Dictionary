@@ -14,57 +14,11 @@
         <div class="container-md">
             <div class="row">
                 <div class="col-xl-3 col-sm-4">
-                    <div class="bg-white w-100 d-sm-none d-block position-fixed start-0 end-0 p-2">
-                        <button onclick="onClickMenu()" id="menu-btn" class="btn btn-primary w-100 mx-auto">Menu <i
-                                class="fa-solid fa-bars ps-2"></i></button>
-                    </div>
-                    <nav id="user-menu"
-                        class="w-100 bg-white mt-sm-0 mt-5 sidebar d-flex flex-column p-3 border-end my-2 d-sm-block d-none">
-                        <a href="/users/<%= username %>"
-                            class="sidebar-link d-flex align-items-center justify-content-between">
-                            <% if(currentPath=='/users/' + username){ %>
-                                <p class="fs-5 sidebar-active sidebar-text"># Profile</p>
-                                <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
-                                <% }else{ %>
-                                    <p class="fs-5 sidebar-text"># Profile</p>
-                                    <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
-                                    <% } %>
-                        </a>
-                        <a href="/users/<%= username %>/entries"
-                            class="sidebar-link d-flex align-items-center justify-content-between">
-                            <% if(currentPath=='/users/' + username +'/entries'){ %>
-                                <p class="fs-5 sidebar-active sidebar-text"># Entries</p>
-                                <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
-                                <% }else{ %>
-                                    <p class="fs-5 sidebar-text"># Entries</p>
-                                    <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
-                                    <% } %>
-                        </a>
-                        <% if(currentUser.role==="admin" ){ %>
-                            <a href="/users/<%= currentUser.username %>/admin"
-                                class="sidebar-link d-flex align-items-center justify-content-between">
-                                <% if(currentPath=='/users/' +currentUser.username+'/admin'){ %>
-                                    <p class="fs-5 sidebar-active sidebar-text"># Admin Panel</p>
-                                    <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
-                                    <% }else{ %>
-                                        <p class="fs-5 sidebar-text"># Admin Panel</p>
-                                        <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
-                                        <% } %>
-                            </a>
-                            <a href="/users/<%= currentUser.username %>/reports"
-                                class="sidebar-link d-flex align-items-center justify-content-between">
-                                <% if(currentPath=='/users/' +currentUser.username+'/reports'){ %>
-                                    <p class="fs-5 sidebar-active sidebar-text"># Reports</p>
-                                    <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
-                                    <% }else{ %>
-                                        <p class="fs-5 sidebar-text"># Reports</p>
-                                        <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
-                                        <% } %>
-                            </a>
-                            <% } %>
-                    </nav>
+                    <%- include('./layouts/user-sidebar') %>
                 </div>
                 <div class="col-xl-9 col-sm-8">
+
+                    <!-- Tab Selector -->
                     <div class="d-flex py-3 mt-sm-0 mt-5">
                         <a href="/users/<%= currentUser.username %>/admin?type=categories" class="me-2">
                             <button
@@ -79,6 +33,8 @@
                                 class="btn <%= type === 'users' ? 'btn-primary' : 'btn-outline-primary' %>">Users</button>
                         </a>
                     </div>
+                    <!-- Tab Selector End -->
+
                     <div class="pb-3">
 
                         <!-- Category Tab -->
@@ -127,8 +83,9 @@
                                         <% }) %>
                                 </tbody>
                             </table>
+                            <!-- Category Tab End -->                        
 
-                            <!-- Add Modal -->
+                            <!-- Add Category Modal -->
                             <div class="modal fade" id="categoryAddModal" tabindex="-1">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -155,6 +112,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Add Category Modal End -->
 
                             <!-- Topic Tab -->
                             <% }else if(type==='topics' ){ %>
@@ -215,8 +173,9 @@
                                             <% }) %>
                                     </tbody>
                                 </table>
+                                <!-- Topic Tab End -->
 
-                                <!-- Add Modal -->
+                                <!-- Add Topic Modal -->
                                 <div class="modal fade" id="topicAddModal" tabindex="-1">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -250,74 +209,65 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Add Topic Modal End -->
+
                                 <% }else{ %>
 
-                                    <!-- User Tab -->
-                                    <table class="table table-hover">
-                                        <thead>
+                                <!-- User Tab -->
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Username</th>
+                                            <th scope="col">Point</th>
+                                            <th scope="col">Role</th>
+                                            <th scope="col"> # </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% users && users.forEach((user)=>{ %>
                                             <tr>
-                                                <th scope="col">Username</th>
-                                                <th scope="col">Point</th>
-                                                <th scope="col">Role</th>
-                                                <th scope="col"> # </th>
+                                            <form action="/users/<%= user.dataValues.username %>?_method=PUT" method="POST">
+                                                <td scope="row">
+                                                    <a class="link" href="/users/<%= user.dataValues.username %>"><%= user.dataValues.username %></a> 
+                                                </td>
+                                                <td>
+                                                    <%= user.dataValues.point %>
+                                                </td>
+                                                <td>
+                                                    <select class="edit-input py-1" name="role">
+                                                        <% if(user.dataValues.role === 'user'){ %>
+                                                            <option selected value="user">User</option>
+                                                            <option value="admin">Admin</option>
+                                                            <option value="banned">Banned</option>
+                                                        <% }else if(user.dataValues.role === 'admin'){ %>
+                                                            <option value="user">User</option>
+                                                            <option selected value="admin">Admin</option>
+                                                            <option value="banned">Banned</option>
+                                                        <% }else{ %>
+                                                            <option value="user">User</option>
+                                                            <option value="admin">Admin</option>
+                                                            <option selected value="banned">Banned</option>
+                                                        <% } %>    
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </button>
+                                                </td>
+                                            </form>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% users && users.forEach((user)=>{ %>
-                                                <tr>
-                                                    <form action="/users/<%= user.dataValues.username %>?_method=PUT" method="POST">
-                                                    <td scope="row">
-                                                       <a class="link" href="/users/<%= user.dataValues.username %>"><%= user.dataValues.username %></a> 
-                                                    </td>
-                                                    <td>
-                                                       <%= user.dataValues.point %>
-                                                    </td>
-                                                    <td>
-                                                        <select class="edit-input py-1" name="role">
-                                                            <% if(user.dataValues.role === 'user'){ %>
-                                                                <option selected value="user">User</option>
-                                                                <option value="admin">Admin</option>
-                                                                <option value="banned">Banned</option>
-                                                            <% }else if(user.dataValues.role === 'admin'){ %>
-                                                                <option value="user">User</option>
-                                                                <option selected value="admin">Admin</option>
-                                                                <option value="banned">Banned</option>
-                                                            <% }else{ %>
-                                                                <option value="user">User</option>
-                                                                <option value="admin">Admin</option>
-                                                                <option selected value="banned">Banned</option>
-                                                            <% } %>    
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <button type="submit" class="btn btn-primary">
-                                                            <i class="fa-solid fa-pen-to-square"></i>
-                                                        </button>
-                                                    </td>
-                                                </form>
-                                                </tr>
-                                                <% }) %>
-                                        </tbody>
-                                    </table>
+                                            <% }) %>
+                                    </tbody>
+                                </table>
+                                <!-- User Tab End -->
 
-                                    <% } %>
+                                <% } %>
                     </div>
                 </div>
             </div>
         </div>
         <%- include('./layouts/footer') %>
-            <script>
-                const menu = document.getElementById('user-menu');
-
-                const onClickMenu = () => {
-                    var exists = menu.classList.contains('d-none');
-                    if (exists) {
-                        menu.classList.remove('d-none');
-                    } else {
-                        menu.classList.add('d-none');
-                    }
-                };
-            </script>
 </body>
 
 </html>

@@ -1,0 +1,34 @@
+<div class="bg-white w-100 d-sm-none d-block position-fixed start-0 end-0 p-2 z-indexx">
+    <button 
+        onclick="onClickButton()" 
+        id="sidebar-btn" 
+        class="btn btn-primary w-100 mx-auto"
+        >Menu <i class="fa-solid fa-bars ps-2"></i>
+    </button>
+</div>
+<nav id="sidebar" class="w-100 bg-white mt-sm-0 mt-5 sidebar d-flex flex-column p-3 border-end my-2 d-sm-block d-none">
+    <% locals.categories && locals.categories.forEach((c)=>{ %>
+            <a href="/categories/<%= c.dataValues.id %>"
+                class="sidebar-link d-flex align-items-center justify-content-between">
+                <% if(currentPath=='/categories/' +c.dataValues.id){ %>
+                    <p class="fs-5 sidebar-active sidebar-text"># <%= c.dataValues.name %></p>
+                    <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
+                <% }else{ %>
+                    <p class="fs-5 sidebar-text"># <%= c.dataValues.name %></p>
+                    <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
+                <% } %>
+            </a>
+        <% }) %>
+</nav>
+
+<script>
+    function onClickButton() {
+        const sidebar = document.getElementById('sidebar');
+        var exists = sidebar.classList.contains('d-none');
+        if (exists) {
+            sidebar.classList.remove('d-none');
+        } else {
+            sidebar.classList.add('d-none');
+        }
+    }
+</script>

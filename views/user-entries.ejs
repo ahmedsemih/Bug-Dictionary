@@ -14,44 +14,10 @@
         <div class="container-md">
             <div class="row">
                 <div class="col-xl-3 col-sm-4">
-                    <div class="bg-white w-100 d-sm-none d-block position-fixed start-0 end-0 p-2">
-                        <button onclick="onClickMenu()" id="menu-btn" class="btn btn-primary w-100 mx-auto">Menu <i class="fa-solid fa-bars ps-2"></i></button>
-                    </div>
-                    <nav id="user-menu" class="w-100 bg-white sidebar d-flex flex-column p-3 border-end mt-sm-0 mt-5 my-2 d-sm-block d-none">
-                        <a href="/users/<%= username %>"
-                            class="sidebar-link d-flex align-items-center justify-content-between">
-                            <% if(currentPath=='/users/' + username){ %>
-                                <p class="fs-5 sidebar-active sidebar-text"># Profile</p>
-                                <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
-                                <% }else{ %>
-                                    <p class="fs-5 sidebar-text"># Profile</p>
-                                    <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
-                                    <% } %>
-                        </a>
-                        <a href="/users/ <%= username %> /entries"
-                            class="sidebar-link d-flex align-items-center justify-content-between">
-                            <% if(currentPath=='/users/' + username +'/entries'){ %>
-                                <p class="fs-5 sidebar-active sidebar-text"># Entries</p>
-                                <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
-                                <% }else{ %>
-                                    <p class="fs-5 sidebar-text"># Entries</p>
-                                    <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
-                                    <% } %>
-                        </a>
-                        <% if(currentUser.role==="admin" && username===currentUser.username ){ %>
-                            <a href="/users/<%= locals.currentUser.username %>/admin"
-                                class="sidebar-link d-flex align-items-center justify-content-between">
-                                <% if(currentPath=='/users/' +currentUser.username+'/admin'){ %>
-                                    <p class="fs-5 sidebar-active sidebar-text"># Admin Panel</p>
-                                    <p class="fs-5 sidebar-active sidebar-arrow d-md-block d-none">--></p>
-                                    <% }else{ %>
-                                        <p class="fs-5 sidebar-text"># Admin Panel</p>
-                                        <p class="fs-5 sidebar-arrow d-md-block d-none">--></p>
-                                        <% } %>
-                            </a>
-                            <% } %>
-                    </nav>
+                    <%- include('./layouts/user-sidebar') %>
                 </div>
+
+                <!-- User Entries -->
                 <div class="col-xl-9 col-sm-8">
                     <% entries && entries.forEach((entry)=>{ %>
                         <div class="py-4 pe-3 border-bottom mt-sm-0 mt-5">
@@ -79,8 +45,7 @@
                                                 <%= entry.dataValues.like.length || 0 %>
                                             </a>
                                             <% } %>
-                                                <% if(entry.dataValues.dislike.includes(locals.currentUser.username)){
-                                                    %>
+                                                <% if(entry.dataValues.dislike.includes(locals.currentUser.username)){ %>
                                                     <a href="/entries/<%= entry.dataValues.id %>/dislike/<%= locals.currentUser.username %>"
                                                         class="px-3 link">
                                                         <i class="fa-solid fa-thumbs-down text-primary"></i>
@@ -122,21 +87,23 @@
                             </div>
                         </div>
                         <% }) %>
+                        <% if(entries.length < 1 ){ %>
+                            <div class="w-100 text-center my-5">
+                                <i class="fa-solid fa-bug avatar my-4"></i>
+                                <h2>You didn't write any entries yet.</h2>
+                                <a href="/">
+                                    <button class="btn btn-primary my-5">
+                                        Go to Home Page
+                                    </button>
+                                </a>
+                            </div>
+                        <% } %>
                 </div>
+                <!-- User Entries End -->
+
             </div>
         </div>
         <%- include('./layouts/footer') %>
-        <script>
-            const onClickMenu=()=>{
-                const menu=document.getElementById('user-menu');
-                var exists=menu.classList.contains('d-none');
-                if(exists){
-                    menu.classList.remove('d-none');
-                }else{
-                    menu.classList.add('d-none');
-                }
-            };
-        </script>
 </body>
 
 </html>

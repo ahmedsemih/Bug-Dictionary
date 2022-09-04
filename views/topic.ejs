@@ -18,11 +18,16 @@
                     <%- include('./layouts/sidebar') %>
                 </div>
                 <div class="col-xl-9 col-sm-8">
+
+                    <!-- Topic Title -->
                     <a class="link" href="<%= locals.currentPath %>">
                         <h3 class="pt-4 mt-sm-0 mt-5">
                             <%= topic.dataValues.name %>
                         </h3>
                     </a>
+                    <!-- Topic Title End -->
+
+                    <!-- Entries -->
                     <% if(entries.length>0){ %>
                     <% entries && entries.forEach((entry)=>{ %>
                         <div class="pt-4 pb-3 pe-3 mt-sm-0 mt-4">
@@ -80,6 +85,9 @@
                         <% }else{ %>
                         <p class="pt-2">This is empty come on write the first entry.</p>
                         <% } %>
+                        <!-- Entries End -->
+
+                        <!-- Pagination -->
                             <div class="pt-3 w-100 d-flex justify-content-center">
                                 <nav>
                                     <ul class="pagination">
@@ -102,6 +110,9 @@
                                     </ul>
                                 </nav>
                             </div>
+                        <!-- Pagintion End -->
+
+                        <!-- Entry Creator -->
                             <div class="py-3 border-top">
                                 <h5>Topic : <%= topic.dataValues.name %></h5>
                                 <form class="my-3" action="/entries" method="POST">
@@ -121,6 +132,7 @@
                                     </div>
                                 </form>
                             </div>
+                        <!-- Entry Creator End -->
                 </div>
             </div>
         </div>
