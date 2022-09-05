@@ -20,7 +20,7 @@ exports.getHomePage = async (req, res) => {
             entries.length > 0 && entryArray.push(entries[0].dataValues);
             entries.length > 0 && topicArray.push(result.rows[i]);
         }
-        return res.render('index', { topics: topicArray, entries: entryArray, currentPage: page + 1, totalCount: result.count, categoryId: req.params.id });
+        return res.render('index', { topics: topicArray, entries: entryArray, currentPage: page + 1, totalCount: result.count });
     };
 };
 

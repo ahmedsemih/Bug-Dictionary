@@ -102,7 +102,7 @@
                                             <a class="page-link" href="/topics/<%= topic.dataValues.id %>?page=<%= i %>"><%= i %></a>
                                         </li>
                                         <% } %>
-                                        <li class="page-item <%= currentPage+1 > (totalCount/10) && 'disabled' %>">
+                                        <li class="page-item <%= currentPage > (totalCount/10) && 'disabled' %>">
                                             <a class="page-link" href="/topics/<%= topic.dataValues.id %>?page=<%= currentPage+1 %>">
                                                 <span>&raquo;</span>
                                             </a>
