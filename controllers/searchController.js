@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
+const sequelize=require('../utils/database');
 const Topic = require('../models/Topic');
 const Category = require('../models/Category');
 const User = require('../models/User');
@@ -24,7 +25,11 @@ exports.getSearch = async (req, res) => {
         const result = await Topic.findAndCountAll({ where: { name: { [Op.iLike]: `%${req.query.q}%` } } });
         if (result.count > 1) {
             for (let i = 0; i < result.rows.length; i++) {
-                const entries = await Entry.findAll({ limit: 1, where: { TopicId: result.rows[i].dataValues.id }, include: Topic, order: [['like', 'DESC']] });
+                const entries = await Entry.findAll({ 
+                    limit: 1,
+                    where: { TopicId: result.rows[i].dataValues.id }, 
+                    include: Topic, 
+                    order: [[sequelize.literal(`(SELECT COUNT("like") FROM "Entries" WHERE "TopicId"=${result.rows[i].dataValues.id})`), 'DESC']] });
                 entries.length > 0 && entryArray.push(entries[0].dataValues);
                 entries.length > 0 && topicArray.push(result.rows[i]);
             }

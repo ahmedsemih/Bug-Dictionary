@@ -1,10 +1,7 @@
+const sequelize=require('../utils/database');
 const Category = require('../models/Category');
 const Topic = require('../models/Topic');
 const Entry = require('../models/Entry');
-
-exports.getAllCategories = (req, res) => {
-
-};
 
 exports.getCategoryById = async (req, res) => {
     if (req.params.id !== 'favicon.ico') {

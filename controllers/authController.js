@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 
+const sequelize=require('../utils/database');
 const User = require('../models/User');
 const Topic = require('../models/Topic');
 const Entry = require('../models/Entry');
@@ -11,7 +12,11 @@ exports.getHomePage = async (req, res) => {
         const topicArray = [];
         const result = await Topic.findAndCountAll({ offset: 10 * page, limit: 10, where: { status: true } });
         for (let i = 0; i < result.rows.length; i++) {
-            const entries = await Entry.findAll({ limit: 1, where: { TopicId: result.rows[i].dataValues.id }, include: Topic, order: [['like', 'DESC']] });
+            const entries = await Entry.findAll({ 
+                limit: 1, 
+                where: { TopicId: result.rows[i].dataValues.id }, 
+                include: Topic, 
+                order: [[sequelize.literal(`(SELECT COUNT("like") FROM "Entries" WHERE "TopicId"=${result.rows[i].dataValues.id})`), 'DESC']] });
             entries.length > 0 && entryArray.push(entries[0].dataValues);
             entries.length > 0 && topicArray.push(result.rows[i]);
         }
