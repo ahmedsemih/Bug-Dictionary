@@ -12,15 +12,14 @@ exports.getSearch = async (req, res) => {
         const entryArray = [];
         const topicArray = [];
 
-        Category.findOne({ where: { name: { [Op.iLike]: `%${req.query.q}%` } } })
-            .then((category) => {
-                return res.redirect(`/categories/${category.id}`);
-            }).catch((error) => console.log(error));
-
-        User.findOne({ where: { username: { [Op.iLike]: `%${req.query.q}%` } } })
-            .then((user) => {
-                return res.redirect(`/users/${user.username}`);
-            }).catch((error) => console.log(error));
+        const category=await Category.findOne({ where: { name: { [Op.iLike]: `%${req.query.q}%` } } });
+        if(category){
+            return res.redirect(`/categories/${category.id}`);
+        }
+        const user=await User.findOne({ where: { username: { [Op.iLike]: `%${req.query.q}%` } } });
+        if(user){
+            return res.redirect(`/users/${user.username}`);
+        }
 
         const result = await Topic.findAndCountAll({ where: { name: { [Op.iLike]: `%${req.query.q}%` } } });
         if (result.count > 1) {
