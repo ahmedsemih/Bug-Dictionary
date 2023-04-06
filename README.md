@@ -4,8 +4,6 @@ https://user-images.githubusercontent.com/102798814/188657278-9786e61a-3d19-4c2f
 
 Responsive Fullstack Dictionary Application.
 
-**Live demo: [https://bug-dictionary.herokuapp.com](https://bug-dictionary.herokuapp.com)**
-
 ## Built with
 
 - [HTML](https://html.spec.whatwg.org/multipage/) - Web Page Markup Language
